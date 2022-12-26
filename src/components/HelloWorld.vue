@@ -1,9 +1,11 @@
 <template>
     <el-container>
-        <el-header>
-            <el-menu default-active="home" mode="horizontal" :ellipsis="false" :collapse-transition="false"
+        <el-header class="nav" :class="{'fix-nav': navBarFixed}" style="border: 1px solid black;padding-inline: 5%;" >
+            <el-menu default-active="about" mode="horizontal" :ellipsis="false" :collapse-transition="false"
                      popper-effect="dark" router>
                 <el-menu-item  index="about">首页</el-menu-item>
+                <el-menu-item  index="showScoreView">展示页</el-menu-item>
+                <el-menu-item  index="upload">上传</el-menu-item>
                 <div class="flex-grow" />
                 <el-sub-menu  index="UserBack">
                     <template #title >
@@ -19,14 +21,14 @@
                 </el-menu-item>
             </el-menu>
         </el-header>
-        <el-main style="border: 1px solid black">
-            <div id="show_scores" style="width: 900px;height:400px;border: 1px solid black;left: 10%"></div>
+        <el-main style="border: 1px solid black;padding-inline: 5%">
+            <router-view></router-view>
         </el-main>
+        <el-backtop :right="50" :bottom="50" />
     </el-container>
 
 </template>
 <script>
-import * as ECharts from 'echarts';
 import axios from "axios";
 import {useToggle} from "@vueuse/shared";
 import {useDark} from "@vueuse/core";
@@ -43,60 +45,57 @@ export default {
     },
     data() {
         return {
-
+            navBarFixed: false,
         }
     },
     mounted() {
-        this.drawChart();
+        // 事件监听滚动条
+        window.addEventListener("scroll", this.watchScroll);
+    },
+    destroyed() {
+        // 移除事件监听
+        window.removeEventListener("scroll", this.watchScroll);
     },
     methods: {
-        drawChart() {
-            // 基于准备好的dom，初始化echarts实例
-            // axios.get('/student/update').then(res => {
-            //   console.log(res.data.data)
-            // })
-            let myChart = ECharts.init(document.getElementById("show_scores"));
-            // 指定图表的配置项和数据
-            let option = {
-                title: {
-                    text: "马奇伟第二学期成绩",
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {type: 'cross'}
-                },
-                legend: {
-                    data: ["语文成绩"]
-                },
-                xAxis: {
-                    data: ["期初", "月考", "期中", "月考", "模拟考", "期末"]
-                },
-                yAxis: {
-                    type: "value",
-                    name: "分数",
-                    min: 0,
-                    max: 130,
-                    position: 'left',
-                    axisLabel: {
-                        formatter: '{value}'
-                    }
-                },
-                series: [
-                    {
-                        name: "语文成绩",
-                        type: "line",
-                        data: [5, 20, 36, 10, 10, 20]
-                    }
-                ]
-            };
-            // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option);
-        }
+        watchScroll() {
+            // 滚动的距离
+            const scrollTop =
+                window.pageYOffset ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop;
+            // 容器的高度
+            const offsetTop = document.querySelector(".nav").offsetHeight;
+            // console.log("scrollTop=>", scrollTop, "  offsetTop=>", offsetTop);
+            //  滚动的距离如果大于了元素到顶部的距离时，实现吸顶效果
+            this.navBarFixed = scrollTop > offsetTop + 50;
+        },
     }
 }
 </script>
 <style>
 .flex-grow {
     flex-grow: 1;
+}
+
+/* 固定导航 */
+.fix-nav {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    -webkit-animation-name: fadeInOut;
+    -webkit-animation-timing-function: inherit;
+    -webkit-animation-duration: 1s;
+    opacity: 80%;
+}
+
+/*导航吸顶的渐显*/
+@-webkit-keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 80%;
+    }
 }
 </style>
