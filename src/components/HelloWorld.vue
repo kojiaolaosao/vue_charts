@@ -11,9 +11,7 @@
                     <template #title >
                         <el-avatar size="default" src=""></el-avatar>
                     </template>
-                    <el-menu-item index="UserInfo">个人中心</el-menu-item>
-                    <el-menu-item >退出</el-menu-item>
-                    <el-menu-item>登录/注册</el-menu-item>
+                    <el-menu-item index="manage">个人中心</el-menu-item>
                 </el-sub-menu>
                 <el-menu-item >
                     <span @click.stop="toggleDark()">暗黑模式</span>

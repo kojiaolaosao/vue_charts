@@ -26,6 +26,11 @@ const routes = [
                 path: '/upload',
                 name: 'upload',
                 component: () => import('../views/UploadView.vue')
+            },
+            {
+                path: '/manage',
+                name: 'manage',
+                component: () => import('../views/manageView.vue')
             }
         ]
     },
