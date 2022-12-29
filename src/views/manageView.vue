@@ -22,7 +22,14 @@
             <template #footer>
                 <span class="dialog-footer">
                     <el-button @click="centerDialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="subForm">确认</el-button>
+                    <el-popconfirm width="220" confirm-button-text="确认" cancel-button-text="取消" icon-color="#626AEF" title="确定要修改嘛?"
+                                   @confirm="subForm"
+                                   @cancel="centerDialogVisible = false"
+                    >
+                        <template #reference>
+                            <el-button type="primary">确认</el-button>
+                        </template>
+                    </el-popconfirm>
                 </span>
             </template>
         </el-dialog>
@@ -47,6 +54,14 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div style="margin: 1%;">
+            <el-pagination background layout="total,prev, pager, next" :pager-count="5"
+                           :page-size="page.size"
+                           :current-page="page.current"
+                           :total="page.total"
+                           @current-change="handleCurrentChange">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -85,8 +100,14 @@ export default {
                 {text: '高二', value: 2},
                 {text: '高三', value: 3}
             ],
-            centerDialogVisible:false,
-            nowForm:null,
+            centerDialogVisible: false,
+            nowForm: null,
+            //分页
+            page: {
+                size: 10,
+                current: 0,
+                total: 0,
+            },
         }
     },
     mounted() {
@@ -94,9 +115,10 @@ export default {
     },
     methods: {
         getAllRecords() {
-            axios.get('/score/AllRecord').then(res => {
-                this.tableData = res.data.data;
-                console.log(res.data.data)
+            axios.post('/score/getPage', this.page).then(res => {
+                console.log(res.data.data);
+                this.tableData = res.data.data.records;
+                this.page.total=res.data.data.total
             })
         },
         handleSelectionChange(val) {
@@ -109,13 +131,25 @@ export default {
             const property = column['property'];
             return row[property] === value;
         },
-        update(row,index){
-            this.nowForm=JSON.parse(JSON.stringify(row));
-            this.centerDialogVisible=true;
+        update(row, index) {
+            this.nowForm = JSON.parse(JSON.stringify(row));
+            this.centerDialogVisible = true;
         },
-        subForm(){
-            this.centerDialogVisible=false;
-        }
+        subForm() {
+            //axios post
+            console.log(this.nowForm);
+            axios.post("/score/updateRecord", this.nowForm).then(res => {
+                // console.log(res);
+                this.getAllRecords();
+            })
+            this.centerDialogVisible = false;
+        },
+        //分页
+        handleCurrentChange(val) {
+            this.page.current = val;
+            // 获取数据
+            this.getAllRecords();
+        },
     }
 }
 </script>
