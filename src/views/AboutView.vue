@@ -28,7 +28,7 @@
                 <el-card class="box-card" v-for="item in records" style="padding-bottom: 1%">
                     <template #header>
                         <div class="card-header">
-                            <span>{{ item.title }}</span>
+                            <span style="font-weight: bold">{{ item.title }}</span>
                         </div>
                     </template>
                     <div style="color: #b4b4b4">{{ item.grade + "/" }}{{ item.clazz }}班</div>
@@ -61,7 +61,7 @@
     </div>
 </template>
 <script>
-
+import axios from "@/axios";
 export default {
     name: 'read_xlsx',
     data() {
@@ -70,18 +70,7 @@ export default {
             grades: [{value: '1', label: '高一'}, {value: '2', label: '高二'}, {value: '2', label: '高三'}],
             searchGrade: null,
             searchClazz: null,
-            records: [
-                {title: '十月考试1', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-10-22"},
-                {title: '十月考试2', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-09-02"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-                {title: '十月考试3', info: '不理想', grade: 3, clazz: 2, createdTime: "2022-03-12"},
-            ],
+            records: [],
             //分页
             page: {
                 size: 10,
@@ -90,46 +79,23 @@ export default {
             },
         }
     },
+    mounted() {
+      this.getAllRecords();
+    },
     methods: {
-        upload(file, fileList) {
-            console.log("file", file);
-            console.log("fileList", fileList);
-            let files = {0: file};
-            this.readExcel(files);
-        },
-        readExcel(files) {
-            var that = this;
-            console.log(files);
-
-            if (files.len <= 0) return;
-            if (!/\.(xls|xlsx)$/.test(files[0].name.toLowerCase())) {
-                return;
-            }
-
-            const fileReader = new FileReader();
-            fileReader.onload = (ev) => {
-                try {
-                    const data = ev.target.result;
-                    const workbook = read(data, {
-                        type: 'binary'
-                    });
-                    // 取第一张表
-                    const wsname = workbook.SheetNames[0];
-                    // 生成json表格内容
-                    const ws = utils.sheet_to_json(workbook.Sheets[wsname]);
-                    console.log(ws);
-                    // 后续为自己对ws数据的处理
-                } catch (e) {
-                    return false;
-                }
-            };
-            fileReader.readAsBinaryString(files[0]);
-        },
         //分页
         handleCurrentChange(val) {
             this.page.current = val;
             // 获取数据
+            this.getAllRecords();
         },
+        getAllRecords(){
+            axios.post('/score/getPageOrderByTime',this.page).then(res=>{
+                this.records=res.data.data.records;
+                this.page.total=res.data.data.total;
+                console.log(res.data.data);
+            })
+        }
     }
 }
 

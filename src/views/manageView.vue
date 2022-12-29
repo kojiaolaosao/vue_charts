@@ -49,7 +49,12 @@
             <el-table-column property="updatedTime" label="更新时间" sortable/>
             <el-table-column fixed="right" label="操作" width="140">
                 <template #default="scope">
-                    <el-button type="danger" size="small" @click.prevent="del(scope.$index)">删除</el-button>
+                    <el-popconfirm width="220" confirm-button-text="确认" cancel-button-text="取消" icon-color="#626AEF"
+                                   title="确定要删除嘛?" @confirm="del(scope.$index)">
+                        <template #reference>
+                            <el-button type="danger" size="small">删除</el-button>
+                        </template>
+                    </el-popconfirm>
                     <el-button type="primary" size="small" @click="update(scope.row,scope.$index)">编辑</el-button>
                 </template>
             </el-table-column>
@@ -116,7 +121,7 @@ export default {
     methods: {
         getAllRecords() {
             axios.post('/score/getPage', this.page).then(res => {
-                console.log(res.data.data);
+                // console.log(res.data.data);
                 this.tableData = res.data.data.records;
                 this.page.total=res.data.data.total
             })
@@ -125,7 +130,14 @@ export default {
             this.multipleSelection = val;
         },
         del(index) {
-            this.tableData.splice(index, 1);
+            // this.tableData.splice(index, 1);
+            axios.post('/score/delRecord/'+this.tableData[index].id).then(res=>{
+                if(res.data.data){
+                    this.$message.success('删除成功');
+                }
+                this.getAllRecords();
+                // console.log(res.data);
+            })
         },
         filterHandler(value, row, column) {
             const property = column['property'];
@@ -137,7 +149,7 @@ export default {
         },
         subForm() {
             //axios post
-            console.log(this.nowForm);
+            // console.log(this.nowForm);
             axios.post("/score/updateRecord", this.nowForm).then(res => {
                 // console.log(res);
                 this.getAllRecords();
