@@ -31,6 +31,16 @@ const routes = [
                 path: '/manage',
                 name: 'manage',
                 component: () => import('../views/manageView.vue')
+            },
+            {
+                path: '/scoreTable',
+                name: 'scoreTable',
+                component: () => import('../views/ScoreTableView.vue')
+            },
+            {
+                path: '/studentSearch',
+                name: 'studentSearch',
+                component: () => import('../views/StudentSearchView.vue')
             }
         ]
     },

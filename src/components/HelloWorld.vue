@@ -4,6 +4,7 @@
             <el-menu default-active="about" mode="horizontal" :ellipsis="false" :collapse-transition="false"
                      popper-effect="dark" router>
                 <el-menu-item  index="about">首页</el-menu-item>
+                <el-menu-item  index="studentSearch">学生</el-menu-item>
                 <el-menu-item  index="showScoreView">展示页</el-menu-item>
                 <el-menu-item  index="upload">上传</el-menu-item>
                 <div class="flex-grow" />
