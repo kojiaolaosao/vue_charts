@@ -5,7 +5,6 @@
                      popper-effect="dark" router>
                 <el-menu-item  index="about">首页</el-menu-item>
                 <el-menu-item  index="studentSearch">学生</el-menu-item>
-                <el-menu-item  index="showScoreView">展示页</el-menu-item>
                 <el-menu-item  index="upload">上传</el-menu-item>
                 <div class="flex-grow" />
                 <el-sub-menu  index="UserBack">
@@ -13,6 +12,7 @@
                         <el-avatar size="default" src=""></el-avatar>
                     </template>
                     <el-menu-item index="manage">个人中心</el-menu-item>
+                    <el-menu-item index="studentManage">学生管理</el-menu-item>
                 </el-sub-menu>
                 <el-menu-item >
                     <span @click.stop="toggleDark()">暗黑模式</span>

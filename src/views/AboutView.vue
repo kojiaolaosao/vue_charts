@@ -25,7 +25,7 @@
         </div>
         <div>
             <div style="border: 1px solid black;width: 65%;margin-top:2%;float: left">
-                <el-card class="box-card" v-for="item in records" style="padding-bottom: 1%">
+                <el-card class="box-card" v-for="item in records" style="padding-bottom: 1%" shadow="hover">
                     <template #header>
                         <router-link :to="{path:'/scoreTable', query: { id: item.id }}">
                             <div class="card-header">
@@ -49,14 +49,14 @@
             </div>
             <div style="border: 1px solid black;width: 30%;margin-top:2%;float: right">
                 <h1 style="text-align: center">学生列表</h1>
-                <el-card class="box-card" v-for="(item,i) in students" style="padding-bottom: 1%" shadow="never">
+                <el-card class="box-card" v-for="(item,i) in students" style="padding-bottom: 1%" shadow="hover">
+                    <router-link :to="{path:'/showScoreView', query: { id: item.id }}">
                     <div>{{ item.name }}</div>
-                    <div style="color: #b4b4b4;float: left;font-size: small">{{ item.grade + "/" }}{{
-                            item.clazz
-                        }}班
+                    <div style="color: #b4b4b4;float: left;font-size: small">{{ item.grade + "/" }}{{item.clazz }}班
                     </div>
                     <div style="float: right;margin-right: 2%;font-size: 14px;color: #b4b4b4">{{ item.createdTime }}
                     </div>
+                    </router-link>
                 </el-card>
                 <div style="margin: 3%;">
                     <el-pagination background small layout="total, prev, pager, next" :pager-count="5"
@@ -119,7 +119,7 @@ export default {
             axios.post('/score/getPageOrderByTime', this.page).then(res => {
                 this.records = res.data.data.records;
                 this.page.total = res.data.data.total;
-                console.log(res.data.data);
+                // console.log(res.data.data);
             })
         },
         getAllStudents() {
