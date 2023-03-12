@@ -8,6 +8,20 @@
         <div>
             <el-table :data="scores" show-summary :summary-method="getSummaries">
                 <el-table-column type="index" width="100"></el-table-column>
+                <el-table-column label="姓名" sortable>
+                    <template #default="scope">
+                        <router-link :to="{path:'/showScoreView', query: { id:  scope.row.studentId }}" type="success">
+                            <el-tooltip
+                                class="box-item"
+                                effect="dark"
+                                content="查看历史成绩图表"
+                                placement="bottom"
+                            >
+                                <span style="font-weight: bold">{{ scope.row.name }}</span>
+                            </el-tooltip>
+                        </router-link>
+                    </template>
+                </el-table-column>
                 <el-table-column sortable v-for="it in colItems" :prop="it.prop" :label="it.label"/>
             </el-table>
         </div>
@@ -26,24 +40,24 @@ export default {
             recordInfo: {},
             scores: [],
             colItems: [
-                {label:'姓名',prop:'name'},
-                {label:'总分',prop:'totalScore'},
-                {label:'语文',prop:'languages'},
-                {label:'数学',prop:'maths'},
-                {label:'英语',prop:'englishes'},
-                {label:'附加',prop:'addition'},
-                {label:'物理',prop:'physicals'},
-                {label:'历史',prop:'history'},
-                {label:'地理',prop:'geography'},
-                {label:'地赋',prop:'geographyReal'},
-                {label:'政治',prop:'politics'},
-                {label:'政赋',prop:'politicsReal'},
-                {label:'化学',prop:'chemicals'},
-                {label:'化赋',prop:'chemicalsReal'},
-                {label:'生物',prop:'biological'},
-                {label:'生赋',prop:'biologicalReal'},
-                {label:'班级名次',prop:'classRank'},
-                {label:'年级排名',prop:'gradeRank'},
+                // {label:'姓名',prop:'name'},
+                {label: '总分', prop: 'totalScore'},
+                {label: '语文', prop: 'languages'},
+                {label: '数学', prop: 'maths'},
+                {label: '英语', prop: 'englishes'},
+                {label: '附加', prop: 'addition'},
+                {label: '物理', prop: 'physicals'},
+                {label: '历史', prop: 'history'},
+                {label: '地理', prop: 'geography'},
+                {label: '地赋', prop: 'geographyReal'},
+                {label: '政治', prop: 'politics'},
+                {label: '政赋', prop: 'politicsReal'},
+                {label: '化学', prop: 'chemicals'},
+                {label: '化赋', prop: 'chemicalsReal'},
+                {label: '生物', prop: 'biological'},
+                {label: '生赋', prop: 'biologicalReal'},
+                {label: '班级名次', prop: 'classRank'},
+                {label: '年级排名', prop: 'gradeRank'},
             ],
         }
     },
@@ -105,5 +119,8 @@ export default {
 </script>
 
 <style scoped>
-
+a {
+    text-decoration: none;
+    color: #000000;
+}
 </style>

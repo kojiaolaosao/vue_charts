@@ -1,6 +1,6 @@
 <template>
-    <el-container>
-        <el-header class="nav" :class="{'fix-nav': navBarFixed}" style="border: 1px solid black;padding-inline: 5%;" >
+    <el-container style="color: #2c3e50;">
+        <el-header class="nav" :class="{'fix-nav': navBarFixed}" style="border: 0px solid black;padding-inline: 5%;" >
             <el-menu default-active="about" mode="horizontal" :ellipsis="false" :collapse-transition="false"
                      popper-effect="dark" router>
                 <el-menu-item  index="about">首页</el-menu-item>
@@ -9,18 +9,19 @@
                 <div class="flex-grow" />
                 <el-sub-menu  index="UserBack">
                     <template #title >
-                        <el-avatar size="default" src=""></el-avatar>
+<!--                        <el-avatar size="default" src=""></el-avatar>-->
+                        管理中心
                     </template>
-                    <el-menu-item index="manage">个人中心</el-menu-item>
+                    <el-menu-item index="manage">考试记录管理</el-menu-item>
                     <el-menu-item index="studentManage">学生管理</el-menu-item>
                 </el-sub-menu>
                 <el-menu-item >
-                    <span @click.stop="toggleDark()">暗黑模式</span>
-                    <el-switch size="small" v-model="isDark"/>
+                    <span @click.stop="toggleDark()">切换模式&nbsp;</span>
+                    <el-switch v-model="isDark" :active-icon="MoonNight" :inactive-icon="Sunrise"/>
                 </el-menu-item>
             </el-menu>
         </el-header>
-        <el-main style="border: 1px solid black;padding-inline: 5%">
+        <el-main style="border: 0px solid black;padding-inline: 5%;">
             <router-view></router-view>
         </el-main>
         <el-backtop :right="50" :bottom="50" />
@@ -31,6 +32,7 @@
 import axios from "axios";
 import {useToggle} from "@vueuse/shared";
 import {useDark} from "@vueuse/core";
+import { Sunrise, MoonNight } from '@element-plus/icons-vue'
 
 export default {
     name: 'show_carve',
@@ -39,7 +41,9 @@ export default {
         const toggleDark = useToggle(isDark)
         return{
             isDark,
-            toggleDark
+            toggleDark,
+            Sunrise,
+            MoonNight
         }
     },
     data() {
@@ -87,6 +91,12 @@ export default {
     -webkit-animation-duration: 1s;
     opacity: 80%;
 }
+
+a {
+    text-decoration: none;
+    color: #2c3e50;
+}
+
 
 /*导航吸顶的渐显*/
 @-webkit-keyframes fadeInOut {

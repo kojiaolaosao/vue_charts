@@ -151,7 +151,7 @@ export default {
             //axios post
             // console.log(this.nowForm);
             axios.post("/score/updateRecord", this.nowForm).then(res => {
-                // console.log(res);
+                console.log(res);
                 this.getAllRecords();
             })
             this.centerDialogVisible = false;

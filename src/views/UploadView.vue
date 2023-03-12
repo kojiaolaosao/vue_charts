@@ -20,7 +20,7 @@
             :before-upload="upload"
             :show-file-list="false"
             accept=".xlsx,.xls"
-            style="width: 100px; display: inline-flex;float: left;margin-bottom: 10%;border: 1px solid"
+            style="width: 100px; display: inline-flex;float: left;margin-bottom: 10%; "
         >
             <el-button size="large" type="primary">导入</el-button>
         </el-upload>
@@ -71,12 +71,12 @@ export default {
         return {
             rules: {
                 title: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' },
+                    { required: true, message: '请输入名称', trigger: 'blur' },
                     { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
                 ],
-                info: [
-                    { required: true, message: '请选择活动区域', trigger: 'change' }
-                ],
+                // info: [
+                //     { required: true, message: '请选择活动区域', trigger: 'change' }
+                // ],
                 grade: [
                     { required: true, message: '请选择年级', trigger: 'change' }
                 ],

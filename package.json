@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "deploy": "gh-pages -d dist -r git@github.com:kojiaolaosao/vue_charts.git -b gh-pages"
   },
   "dependencies": {
     "@vueuse/core": "^9.6.0",
@@ -13,6 +14,7 @@
     "core-js": "^3.8.3",
     "echarts": "^5.4.0",
     "element-plus": "^2.2.26",
+    "gh-pages": "^5.0.0",
     "vue": "^3.2.13",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.0.3",

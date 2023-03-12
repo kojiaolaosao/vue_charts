@@ -23,7 +23,7 @@
                       clearable placeholder="请输入关键词" v-model="searchIn" @keyup.enter="searchRecord"></el-input>
             <el-button size="large" style="float: left;margin-left: 1%" @click="searchRecord">搜索</el-button>
         </div>
-        <div style="border: 1px solid black;width: 80%;margin-top:2%;float: left">
+        <div style="width: 80%;margin-top:2%;float: left">
             <el-card class="box-card" v-for="item in students" style="padding-bottom: 1%" shadow="hover">
                 <template #header>
                     <router-link :to="{path:'/showScoreView', query: { id: item.id }}">

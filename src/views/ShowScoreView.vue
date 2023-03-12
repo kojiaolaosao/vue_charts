@@ -1,5 +1,18 @@
 <template>
-    <div id="show_scores" style="width: 100%;height:600px;"></div>
+    <div style="margin-top: 2%">
+<!--        <div>-->
+<!--            <el-select v-model="selectRecords" multiple size="large" placeholder="筛选考试场次">-->
+<!--                <el-option-->
+<!--                    v-for="(index,item) in sourceRecords"-->
+<!--                    :label="item.title"-->
+<!--                    :value="index">-->
+<!--                </el-option>-->
+<!--            </el-select>-->
+<!--            <el-button size="large" type="default" style="margin-left: 1%" @click="selectOption"> 显示所选场次 </el-button>-->
+<!--            <el-button size="large" type="default" style="margin-left: 1%" @click="selectOrder"> 显示最近5场 </el-button>-->
+<!--        </div>-->
+        <div id="show_scores" style="width: 100%;height:600px;margin-top: 2%"></div>
+    </div>
 </template>
 
 <script>
@@ -16,7 +29,10 @@ export default {
             recordXAxis: [],
             student: null,
             records: [],
-
+            sourceRecords:[],
+            selectRecords:[],
+            sourceData: null,
+            my_echarts:null,
         }
     },
     mounted() {
@@ -25,18 +41,23 @@ export default {
     methods: {
         getAllScore() {
             axios.get('/score/allScore/' + this.student_id).then(res => {
-                this.dealData(res.data.data);
-                this.drawChart();
+                this.sourceData = res.data.data;
+                this.sourceRecords=res.data.data.records;
+                this.dealData(this.sourceData);
             })
         },
         dealData(data) {
-            // console.log(data);
+            console.log(data);
             this.subjects = data.scoreFieldZH;
             for (let k in data.scoreFields) {
 
-                let yAIndex=0;
-                if (k==='classRank'||k==='gradeRank'||k==='totalScore')
-                    yAIndex=1;
+                let yAIndex = 0;
+                if (k === 'gradeRank')
+                    yAIndex = 1;
+                else if(k==='totalScore')
+                    yAIndex = 2;
+                else if (k === 'classRank')
+                    yAIndex = 3;
 
                 if (data.scoreFields[k]) {
                     // console.log(k+"  "+data.fieldEN2ZH[k]);
@@ -45,7 +66,7 @@ export default {
                             name: data.fieldEN2ZH[k],
                             type: "line",
                             data: data[k],
-                            yAxisIndex:yAIndex,
+                            yAxisIndex: yAIndex,
                             // areaStyle:{},
                             // smooth: true,//平滑曲线
                         }
@@ -59,7 +80,7 @@ export default {
             })
             this.records = data.records;
             this.student = data.student;
-
+            this.drawChart();
         },
         drawChart() {
             // 基于准备好的dom，初始化echarts实例
@@ -126,22 +147,74 @@ export default {
                         type: "value",
                         name: "各科分数",
                         min: 0,
-                        max: 200,
+                        max: 150,
+                        scale:true,
                         position: 'left',
-                        axisLabel: {formatter: '{value} 分'}
+                        axisLabel: {formatter: '{value} 分'},
+                        minorTick: {
+                            show: true
+                        },
+                        minorSplitLine: {
+                            show: true
+                        }
                     }, {
                         type: "value",
-                        name: "排名/总分",
+                        name: "总分",
                         min: 0,
                         max: 800,
                         position: 'right',
-                        axisLabel: {formatter: '{value} 分/名'}
+                        axisLabel: {formatter: '{value} 分'}
+                    },
+                    {
+                        type: "value",
+                        name: "排名",
+                        min: 0,
+                        max: 800,
+                        inverse:true,
+                        position: 'right',
+                        offset:80,
+                        axisLabel: {formatter: '{value} 名'}
+                    },
+                    {
+                        type: "value",
+                        name: "班级排名",
+                        min: 0,
+                        max: 60,
+                        scale:true,
+                        inverse:true,
+                        position: 'left',
+                        axisLabel: {formatter: '{value} 名'},
+                        offset:60,
                     },
                 ],
                 series: this.subjectSeries,
+                dataZoom: [
+                    {
+                        type: 'inside',
+                        xAxisIndex: [0, 1],
+                        start: 0,
+                        end: 100
+                    },
+                    {
+                        show: true,
+                        xAxisIndex: [0, 1],
+                        type: 'slider',
+                        top: '92%',
+                        start: 98,
+                        end: 100
+                    }
+                ],
             };
             // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option);
+            myChart.setOption(option, true);
+
+        },
+        selectOption(){
+            console.log(this.selectRecords);
+            // this.dealData(this.sourceData);
+        },
+        selectOrder(){
+            // this.dealData(this.sourceData);
         }
     }
 }
